@@ -54,8 +54,18 @@ body {
 
 /* Header */
 .header {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 1em;
   margin-bottom: 1.5vh;
+}
+
+.header-logo {
+  width: clamp(60px, 10vw, 120px);
+  height: auto;
+  border-radius: 50%;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
 .event-title {
