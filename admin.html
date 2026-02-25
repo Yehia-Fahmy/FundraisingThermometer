@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fundraising Admin</title>
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+  <div class="admin-wrap">
+    <header class="admin-header">
+      <h1>Fundraising Admin</h1>
+      <div class="admin-actions">
+        <button type="button" class="btn btn-secondary" id="openDisplayBtn">Open Display</button>
+        <button type="button" class="btn btn-secondary" id="exportBtn">Export CSV</button>
+      </div>
+    </header>
+
+    <section class="settings-section card">
+      <h2>Settings</h2>
+      <div class="settings-grid">
+        <label class="field">
+          <span>Event title</span>
+          <input type="text" id="settingTitle" placeholder="e.g. Lincoln Elementary Renovation Fund" />
+        </label>
+        <label class="field">
+          <span>Goal amount ($)</span>
+          <input type="number" id="settingGoal" min="1" step="1" placeholder="50000" />
+        </label>
+      </div>
+      <button type="button" class="btn btn-primary" id="saveSettingsBtn">Save settings</button>
+    </section>
+
+    <section class="total-section card">
+      <p class="total-label">Running total</p>
+      <p class="total-value" id="runningTotal">$0</p>
+    </section>
+
+    <section class="donation-section card">
+      <h2>Add donation</h2>
+      <div class="donation-input-row">
+        <label class="sr-only" for="donationAmount">Amount in dollars</label>
+        <input type="number" id="donationAmount" min="1" step="1" placeholder="Amount" />
+        <button type="button" class="btn btn-primary btn-large" id="addDonationBtn">Add Donation</button>
+      </div>
+      <div class="presets">
+        <button type="button" class="btn btn-preset" data-amount="25">$25</button>
+        <button type="button" class="btn btn-preset" data-amount="50">$50</button>
+        <button type="button" class="btn btn-preset" data-amount="100">$100</button>
+        <button type="button" class="btn btn-preset" data-amount="250">$250</button>
+        <button type="button" class="btn btn-preset" data-amount="500">$500</button>
+        <button type="button" class="btn btn-preset" data-amount="1000">$1,000</button>
+      </div>
+    </section>
+
+    <section class="history-section card">
+      <div class="history-header">
+        <h2>Donation history</h2>
+        <button type="button" class="btn btn-danger" id="clearAllBtn">Clear All</button>
+      </div>
+      <ul class="history-list" id="historyList">
+        <!-- Populated by JS -->
+      </ul>
+    </section>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
