@@ -93,6 +93,10 @@ body {
   background: #1d4ed8;
 }
 
+a.btn {
+  text-decoration: none;
+}
+
 .btn-secondary {
   background: #e2e8f0;
   color: #475569;

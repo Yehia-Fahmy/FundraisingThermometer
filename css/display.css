@@ -241,32 +241,38 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1.5em;
+  gap: 2em;
 }
 
 .donate-qr {
-  width: clamp(80px, 12vw, 140px);
+  width: clamp(120px, 18vw, 200px);
   height: auto;
-  border-radius: 8px;
+  border-radius: 10px;
   flex-shrink: 0;
 }
 
-.donate-banner p {
-  margin: 0;
-  font-size: clamp(0.9rem, 2vw, 1.15rem);
-  color: rgba(241, 245, 249, 0.8);
-  line-height: 1.6;
-  text-align: left;
+.donate-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4em;
 }
 
-.donate-banner a {
+.donate-text p {
+  margin: 0;
+  font-size: clamp(1rem, 2.5vw, 1.4rem);
+  color: rgba(241, 245, 249, 0.85);
+  line-height: 1.5;
+}
+
+.donate-text a {
   color: #fbbf24;
   text-decoration: underline;
-  text-underline-offset: 3px;
-  font-weight: 600;
+  text-underline-offset: 4px;
+  font-weight: 700;
+  font-size: clamp(1.1rem, 2.8vw, 1.5rem);
   transition: color 0.15s;
 }
 
-.donate-banner a:hover {
+.donate-text a:hover {
   color: #fcd34d;
 }

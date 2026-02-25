@@ -11,7 +11,6 @@
   var addDonationBtn = document.getElementById('addDonationBtn');
   var runningTotalEl = document.getElementById('runningTotal');
   var historyListEl = document.getElementById('historyList');
-  var openDisplayBtn = document.getElementById('openDisplayBtn');
   var exportBtn = document.getElementById('exportBtn');
   var clearAllBtn = document.getElementById('clearAllBtn');
   var settingTitleEl = document.getElementById('settingTitle');
@@ -101,11 +100,6 @@
     if (isNaN(goal) || goal < 1) goal = 50000;
     FR.setSettings({ title: title, goal: goal });
     renderSettings();
-  });
-
-  openDisplayBtn.addEventListener('click', function () {
-    var base = window.location.href.replace(/\/admin\.html.*$/, '');
-    window.open(base + (base.endsWith('/') ? '' : '/') + 'index.html', '_blank', 'noopener');
   });
 
   clearAllBtn.addEventListener('click', function () {
