@@ -64,7 +64,7 @@
     return getDonations().reduce(function (sum, d) { return sum + (d.amount || 0); }, 0);
   }
 
-  var VALID_CATEGORIES = ['cash', 'cheque', 'card', 'website'];
+  var VALID_CATEGORIES = ['cash', 'cheque', 'card', 'text', 'pledges', 'website'];
 
   function addDonation(amount, category) {
     var num = Math.round(Number(amount));
@@ -106,12 +106,38 @@
 
   function exportDonationsCSV() {
     var donations = getDonations();
-    var headers = 'Amount,Category,Date,Time\n';
+    var categories = VALID_CATEGORIES.slice();
+    var headers = ['Date', 'Time'].concat(categories).concat(['Total']).join(',') + '\n';
+
     var rows = donations.map(function (d) {
       var dt = d.timestamp ? new Date(d.timestamp) : new Date();
+      var dateStr = dt.toLocaleDateString();
+      var timeStr = dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
       var cat = d.category || 'cash';
-      return d.amount + ',' + cat + ',' + dt.toLocaleDateString() + ',' + dt.toLocaleTimeString();
+      var cells = [dateStr, timeStr];
+      categories.forEach(function (c) {
+        cells.push(c === cat ? String(d.amount) : '');
+      });
+      cells.push(String(d.amount));
+      return cells.join(',');
     });
+
+    var totals = {};
+    categories.forEach(function (c) { totals[c] = 0; });
+    var grandTotal = 0;
+    donations.forEach(function (d) {
+      var cat = d.category || 'cash';
+      totals[cat] = (totals[cat] || 0) + d.amount;
+      grandTotal += d.amount;
+    });
+
+    var totalRow = ['Total', ''].concat(
+      categories.map(function (c) { return String(totals[c]); })
+    ).concat([String(grandTotal)]);
+    if (donations.length > 0) {
+      rows.push(totalRow.join(','));
+    }
+
     return headers + rows.join('\n');
   }
 

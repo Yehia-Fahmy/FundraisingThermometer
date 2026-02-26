@@ -81,6 +81,8 @@
     { key: 'cash',    label: 'Cash' },
     { key: 'cheque',  label: 'Cheque' },
     { key: 'card',    label: 'Card' },
+    { key: 'text',    label: 'Text' },
+    { key: 'pledges', label: 'Pledges' },
     { key: 'website', label: 'Website' }
   ];
 
