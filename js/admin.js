@@ -16,6 +16,21 @@
   var settingTitleEl = document.getElementById('settingTitle');
   var settingGoalEl = document.getElementById('settingGoal');
   var saveSettingsBtn = document.getElementById('saveSettingsBtn');
+  var categoryButtonsEl = document.getElementById('categoryButtons');
+  var analyticsSection = document.getElementById('analyticsSection');
+  var breakdownGrid = document.getElementById('breakdownGrid');
+  var topDonationsList = document.getElementById('topDonationsList');
+  var selectedCategory = 'cash';
+
+  categoryButtonsEl.addEventListener('click', function (e) {
+    var btn = e.target.closest('.btn-category');
+    if (!btn) return;
+    categoryButtonsEl.querySelectorAll('.btn-category').forEach(function (b) {
+      b.classList.remove('active');
+    });
+    btn.classList.add('active');
+    selectedCategory = btn.getAttribute('data-category');
+  });
 
   function formatMoney(n) {
     return '$' + Math.round(n).toLocaleString();
@@ -41,8 +56,10 @@
       var dt = d.timestamp ? new Date(d.timestamp) : new Date();
       var timeStr = dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       var dateStr = dt.toLocaleDateString();
+      var cat = d.category || 'cash';
       li.innerHTML =
         '<span class="history-item-amount">' + formatMoney(d.amount) + '</span>' +
+        '<span class="history-item-category badge-' + cat + '">' + cat + '</span>' +
         '<span class="history-item-meta">' + dateStr + ' ' + timeStr + '</span>' +
         '<span class="history-item-actions"><button type="button" class="btn btn-danger" data-id="' + d.id + '" aria-label="Remove donation">Remove</button></span>';
       var btn = li.querySelector('.btn-danger');
@@ -60,15 +77,73 @@
     settingGoalEl.value = s.goal || '';
   }
 
+  var CATEGORIES = [
+    { key: 'cash',    label: 'Cash' },
+    { key: 'cheque',  label: 'Cheque' },
+    { key: 'card',    label: 'Card' },
+    { key: 'website', label: 'Website' }
+  ];
+
+  function renderAnalytics() {
+    var donations = FR.getDonations();
+    var hasDonations = donations.length > 0;
+    analyticsSection.style.display = hasDonations ? '' : 'none';
+    if (!hasDonations) return;
+
+    var totals = {};
+    var counts = {};
+    CATEGORIES.forEach(function (c) { totals[c.key] = 0; counts[c.key] = 0; });
+    var grandTotal = 0;
+    donations.forEach(function (d) {
+      var cat = d.category || 'cash';
+      totals[cat] = (totals[cat] || 0) + d.amount;
+      counts[cat] = (counts[cat] || 0) + 1;
+      grandTotal += d.amount;
+    });
+
+    breakdownGrid.innerHTML = '';
+    CATEGORIES.forEach(function (c) {
+      var amount = totals[c.key];
+      var count = counts[c.key];
+      var pct = grandTotal > 0 ? Math.round((amount / grandTotal) * 100) : 0;
+      var item = document.createElement('div');
+      item.className = 'breakdown-item';
+      item.innerHTML =
+        '<div class="breakdown-bar-track"><div class="breakdown-bar-fill badge-' + c.key + '" style="width:' + pct + '%"></div></div>' +
+        '<div class="breakdown-details">' +
+          '<span class="breakdown-label badge-' + c.key + '">' + c.label + '</span>' +
+          '<span class="breakdown-amount">' + formatMoney(amount) + '</span>' +
+          '<span class="breakdown-meta">' + count + ' donation' + (count !== 1 ? 's' : '') + ' &middot; ' + pct + '%</span>' +
+        '</div>';
+      breakdownGrid.appendChild(item);
+    });
+
+    var top = donations.slice().sort(function (a, b) { return b.amount - a.amount; }).slice(0, 5);
+    topDonationsList.innerHTML = '';
+    top.forEach(function (d, i) {
+      var dt = d.timestamp ? new Date(d.timestamp) : new Date();
+      var timeStr = dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      var cat = d.category || 'cash';
+      var li = document.createElement('li');
+      li.innerHTML =
+        '<span class="top-rank">' + (i + 1) + '</span>' +
+        '<span class="top-amount">' + formatMoney(d.amount) + '</span>' +
+        '<span class="history-item-category badge-' + cat + '">' + cat + '</span>' +
+        '<span class="top-time">' + timeStr + '</span>';
+      topDonationsList.appendChild(li);
+    });
+  }
+
   function render() {
     renderTotal();
+    renderAnalytics();
     renderHistory();
   }
 
   function submitDonation() {
     var raw = donationAmountEl.value.trim();
     if (!raw) return;
-    var entry = FR.addDonation(raw);
+    var entry = FR.addDonation(raw, selectedCategory);
     if (entry) {
       donationAmountEl.value = '';
       donationAmountEl.focus();

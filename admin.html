@@ -36,8 +36,32 @@
       <p class="total-value" id="runningTotal">$0</p>
     </section>
 
+    <section class="analytics-section" id="analyticsSection">
+      <div class="card analytics-card">
+        <h2>By Payment Method</h2>
+        <div class="breakdown-grid" id="breakdownGrid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+      <div class="card analytics-card">
+        <h2>Top Donations</h2>
+        <ol class="top-donations-list" id="topDonationsList">
+          <!-- Populated by JS -->
+        </ol>
+      </div>
+    </section>
+
     <section class="donation-section card">
       <h2>Add donation</h2>
+      <div class="category-row">
+        <span class="category-label">Payment method</span>
+        <div class="category-buttons" id="categoryButtons">
+          <button type="button" class="btn btn-category active" data-category="cash">Cash</button>
+          <button type="button" class="btn btn-category" data-category="cheque">Cheque</button>
+          <button type="button" class="btn btn-category" data-category="card">Card</button>
+          <button type="button" class="btn btn-category" data-category="website">Website</button>
+        </div>
+      </div>
       <div class="donation-input-row">
         <label class="sr-only" for="donationAmount">Amount in dollars</label>
         <input type="number" id="donationAmount" min="1" step="1" placeholder="Amount" />

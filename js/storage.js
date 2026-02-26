@@ -64,13 +64,17 @@
     return getDonations().reduce(function (sum, d) { return sum + (d.amount || 0); }, 0);
   }
 
-  function addDonation(amount) {
+  var VALID_CATEGORIES = ['cash', 'cheque', 'card', 'website'];
+
+  function addDonation(amount, category) {
     var num = Math.round(Number(amount));
     if (!num || num <= 0) return null;
+    var cat = VALID_CATEGORIES.indexOf(category) !== -1 ? category : 'cash';
     var donations = getDonations();
     var entry = {
       id: uuid(),
       amount: num,
+      category: cat,
       timestamp: new Date().toISOString()
     };
     donations.push(entry);
@@ -102,10 +106,11 @@
 
   function exportDonationsCSV() {
     var donations = getDonations();
-    var headers = 'Amount,Date,Time\n';
+    var headers = 'Amount,Category,Date,Time\n';
     var rows = donations.map(function (d) {
       var dt = d.timestamp ? new Date(d.timestamp) : new Date();
-      return d.amount + ',' + dt.toLocaleDateString() + ',' + dt.toLocaleTimeString();
+      var cat = d.category || 'cash';
+      return d.amount + ',' + cat + ',' + dt.toLocaleDateString() + ',' + dt.toLocaleTimeString();
     });
     return headers + rows.join('\n');
   }
